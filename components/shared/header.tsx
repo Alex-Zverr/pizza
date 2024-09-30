@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils'
 import { ArrowRight, ShoppingCart, User } from 'lucide-react'
 import Image from 'next/image'
-import { Container } from '.'
+import { Container, SearchInput } from '.'
 import { Button } from '../ui'
 
 interface Props {
@@ -27,6 +27,10 @@ export const Header: React.FC<Props> = className => {
 							вкусней уже некуда
 						</p>
 					</div>
+				</div>
+
+				<div className='mx-10 flex-1'>
+					<SearchInput />
 				</div>
 
 				{/* Правая часть */}
