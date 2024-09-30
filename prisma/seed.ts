@@ -160,10 +160,105 @@ async function up() {
 			{
 				productId: pizz3.id,
 				pizzaType: 2,
-				price: 1100,
+				price: randomDecimalNumber(200, 1200),
 				size: 40,
 			},
+
+			{
+				productId: 1,
+				price: randomDecimalNumber(200, 1200),
+			},
+			{
+				productId: 2,
+				price: randomDecimalNumber(200, 1200),
+			},
+			{
+				productId: 3,
+				price: randomDecimalNumber(200, 1200),
+			},
+			{
+				productId: 4,
+				price: randomDecimalNumber(200, 1200),
+			},
+			{
+				productId: 5,
+				price: randomDecimalNumber(200, 1200),
+			},
+			{
+				productId: 6,
+				price: randomDecimalNumber(200, 1200),
+			},
+			{
+				productId: 7,
+				price: randomDecimalNumber(200, 1200),
+			},
+			{
+				productId: 8,
+				price: randomDecimalNumber(200, 1200),
+			},
+			{
+				productId: 9,
+				price: randomDecimalNumber(200, 1200),
+			},
+			{
+				productId: 10,
+				price: randomDecimalNumber(200, 1200),
+			},
+			{
+				productId: 11,
+				price: randomDecimalNumber(200, 1200),
+			},
+			{
+				productId: 12,
+				price: randomDecimalNumber(200, 1200),
+			},
+			{
+				productId: 13,
+				price: randomDecimalNumber(200, 1200),
+			},
+			{
+				productId: 14,
+				price: randomDecimalNumber(200, 1200),
+			},
+			{
+				productId: 15,
+				price: randomDecimalNumber(200, 1200),
+			},
+			{
+				productId: 16,
+				price: randomDecimalNumber(200, 1200),
+			},
+			{
+				productId: 17,
+				price: randomDecimalNumber(200, 1200),
+			},
 		],
+	})
+
+	await prisma.cart.createMany({
+		data: [
+			{
+				userId: 1,
+				totalAmount: 0,
+				token: '1111111',
+			},
+			{
+				userId: 2,
+				totalAmount: 0,
+				token: '2343444',
+			},
+		],
+	})
+
+	await prisma.cartItem.create({
+		data: {
+			cartId: 1,
+			productVariantId: 1,
+			ingredients: {
+				connect: [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }],
+			},
+			quantity: 2,
+		},
 	})
 }
 async function down() {
@@ -172,6 +267,8 @@ async function down() {
 	await prisma.$executeRaw`TRUNCATE TABLE "Ingredient" RESTART IDENTITY CASCADE`
 	await prisma.$executeRaw`TRUNCATE TABLE "Product" RESTART IDENTITY CASCADE`
 	await prisma.$executeRaw`TRUNCATE TABLE "ProductVariant" RESTART IDENTITY CASCADE`
+	await prisma.$executeRaw`TRUNCATE TABLE "Cart" RESTART IDENTITY CASCADE`
+	await prisma.$executeRaw`TRUNCATE TABLE "CartItem" RESTART IDENTITY CASCADE`
 }
 async function main() {
 	try {
