@@ -12,7 +12,6 @@ interface Props {
 	items: Item[]
 	limit: number
 	loading?: boolean
-	name: string
 	searchInputPlaceholder?: string
 	onClickCheckbox?: (id: string) => void
 	defaultValue?: Set<string>
