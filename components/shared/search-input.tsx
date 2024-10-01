@@ -18,8 +18,13 @@ export const SearchInput: React.FC<Props> = ({ className }) => {
 	const [products, setProducts] = useState<Product[]>([])
 
 	useDebounce(
-		() => {
-			Api.products.search(searchValue).then(items => setProducts(items))
+		async () => {
+			try {
+				const response = await Api.products.search(searchValue)
+				setProducts(response)
+			} catch (error) {
+				console.log(error)
+			}
 		},
 		500,
 		[searchValue]

@@ -2,7 +2,7 @@
 
 import { cn } from '@/lib/utils'
 import { useState } from 'react'
-import { Input } from '../ui'
+import { Input, Skeleton } from '../ui'
 import { FilterCheckbox, FilterCheckboxProps } from './filter-checkbox'
 
 type Item = FilterCheckboxProps
@@ -11,9 +11,11 @@ interface Props {
 	title: string
 	items: Item[]
 	limit: number
+	loading?: boolean
+	name: string
 	searchInputPlaceholder?: string
-	onChange?: (value: string[]) => void
-	defaultValue?: string[]
+	onClickCheckbox?: (id: string) => void
+	defaultValue?: Set<string>
 	className?: string
 }
 
@@ -23,7 +25,8 @@ export const CheckboxFilterGroup: React.FC<Props> = ({
 	limit,
 	searchInputPlaceholder,
 	className,
-	onChange,
+	loading,
+	onClickCheckbox,
 	defaultValue,
 }) => {
 	const [showAll, setShowAll] = useState(false)
@@ -33,8 +36,25 @@ export const CheckboxFilterGroup: React.FC<Props> = ({
 		setSearchValue(e.target.value)
 	}
 
+	if (loading) {
+		return (
+			<div className={cn(className)}>
+				<p className='font-bold mb-3'>{title}</p>
+				<div className='flex flex-col gap-4'>
+					{...Array(limit)
+						.fill(0)
+						.map((_, index) => (
+							<Skeleton className='w-full h-6 rounded-[8px]' key={index} />
+						))}
+
+					<Skeleton className='w-28 h-6 rounded-[8px]' />
+				</div>
+			</div>
+		)
+	}
+
 	const list = showAll
-		? items.filter(item => item.text.includes(searchValue))
+		? items.filter(item => item.label.includes(searchValue))
 		: items.slice(0, limit)
 
 	return (
@@ -56,11 +76,12 @@ export const CheckboxFilterGroup: React.FC<Props> = ({
 				{list.map((item, index) => (
 					<FilterCheckbox
 						key={index}
-						text={item.text}
+						label={item.label}
 						value={item.value}
+						slug={item.slug}
 						endAdornment={item.endAdornment}
-						checked={false}
-						onCheckedChange={ids => console.log(ids)}
+						checked={defaultValue?.has(item.value)}
+						onCheckedChange={() => onClickCheckbox?.(item.value)}
 					/>
 				))}
 			</div>
