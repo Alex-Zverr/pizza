@@ -1,7 +1,9 @@
 'use client'
 
 import { UseFilterIngredients } from '@/hooks/useFilterIngredients'
-import { FC, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import qs from 'qs'
+import { FC, useEffect, useState } from 'react'
 import { useSet } from 'react-use'
 import { CheckboxFilterGroup, RangeSlider, Title } from '.'
 import { Input } from '../ui'
@@ -15,6 +17,7 @@ interface PriceProps {
 }
 
 export const Filters: FC<Props> = ({ className }) => {
+	const router = useRouter()
 	const { ingredients, loading, onAddId, selectedIds } = UseFilterIngredients()
 
 	const [sizes, { toggle: toggleSizes }] = useSet(new Set<string>([]))
@@ -34,6 +37,22 @@ export const Filters: FC<Props> = ({ className }) => {
 	const onChangePrices = (values: number[]) => {
 		setPrices({ priceFrom: values[0], priceTo: values[1] })
 	}
+
+	const filters = {
+		...prices,
+		pizzaTypes: Array.from(types),
+		pizzaSizes: Array.from(sizes),
+		ingredients: Array.from(selectedIds),
+	}
+
+	useEffect(() => {
+		const query = qs.stringify(filters, {
+			arrayFormat: 'comma',
+			addQueryPrefix: true,
+		})
+
+		router.push(String(query))
+	}, [filters])
 
 	return (
 		<div className={className}>
