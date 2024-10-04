@@ -1,7 +1,7 @@
 'use client'
 
-import { UseFilterIngredients } from '@/hooks/useFilterIngredients'
-import { useRouter } from 'next/navigation'
+import { UseFilterIngredients } from '@/hooks/use-filter-ingredients'
+import { useRouter, useSearchParams } from 'next/navigation'
 import qs from 'qs'
 import { FC, useEffect, useState } from 'react'
 import { useSet } from 'react-use'
@@ -12,20 +12,36 @@ interface Props {
 	className?: string
 }
 interface PriceProps {
-	priceFrom: number
-	priceTo: number
+	priceFrom?: number
+	priceTo?: number
+}
+
+interface QueryFilters extends PriceProps {
+	pizzaTypes: string
+	pizzaSizes: string
+	ingredients: string
 }
 
 export const Filters: FC<Props> = ({ className }) => {
+	const searchPrams = useSearchParams() as unknown as Map<
+		keyof QueryFilters,
+		string
+	>
 	const router = useRouter()
-	const { ingredients, loading, onAddId, selectedIds } = UseFilterIngredients()
+	const { ingredients, loading, onAddId, selectedIds } = UseFilterIngredients(
+		searchPrams.get('ingredients')?.split(',')
+	)
 
-	const [sizes, { toggle: toggleSizes }] = useSet(new Set<string>([]))
-	const [types, { toggle: toggleTypes }] = useSet(new Set<string>([]))
+	const [sizes, { toggle: toggleSizes }] = useSet(
+		new Set<string>(searchPrams.get('pizzaSizes')?.split(',') || [])
+	)
+	const [types, { toggle: toggleTypes }] = useSet(
+		new Set<string>(searchPrams.get('pizzaTypes')?.split(',') || [])
+	)
 
 	const [prices, setPrices] = useState<PriceProps>({
-		priceFrom: 0,
-		priceTo: 3000,
+		priceFrom: Number(searchPrams.get('priceFrom')) || undefined,
+		priceTo: Number(searchPrams.get('priceTo')) || undefined,
 	})
 
 	const listIngredients = ingredients.map(item => ({
@@ -51,7 +67,7 @@ export const Filters: FC<Props> = ({ className }) => {
 			addQueryPrefix: true,
 		})
 
-		router.push(String(query))
+		router.push(String(query), { scroll: false })
 	}, [filters])
 
 	return (
@@ -94,7 +110,7 @@ export const Filters: FC<Props> = ({ className }) => {
 						max={3000}
 						value={String(prices.priceFrom)}
 						onChange={e =>
-							onChangePrices([Number(e.target.value), prices.priceTo])
+							onChangePrices([Number(e.target.value), prices.priceTo || 3000])
 						}
 					/>
 					<Input
@@ -104,7 +120,7 @@ export const Filters: FC<Props> = ({ className }) => {
 						max={3000}
 						value={String(prices.priceTo)}
 						onChange={e =>
-							onChangePrices([prices.priceFrom, Number(e.target.value)])
+							onChangePrices([prices.priceFrom || 0, Number(e.target.value)])
 						}
 					/>
 				</div>
@@ -113,7 +129,7 @@ export const Filters: FC<Props> = ({ className }) => {
 					min={0}
 					max={3000}
 					step={10}
-					value={[prices.priceFrom, prices.priceTo]}
+					value={[prices.priceFrom || 0, prices.priceTo || 3000]}
 					onValueChange={([priceFrom, priceTo]) =>
 						onChangePrices([priceFrom, priceTo])
 					}
