@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils'
 import { ArrowRight, ShoppingCart, User } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Container, SearchInput } from '.'
 import { Button } from '../ui'
 
@@ -13,7 +14,7 @@ export const Header: React.FC<Props> = className => {
 		<header className={cn('border border-b', className)}>
 			<Container className={cn('flex justify-between items-center py-8')}>
 				{/* Левая часть */}
-				<div className='flex items-center gap-4'>
+				<Link href='/' className='flex items-center gap-4'>
 					<Image
 						src='/logo.png'
 						priority={false}
@@ -27,7 +28,7 @@ export const Header: React.FC<Props> = className => {
 							вкусней уже некуда
 						</p>
 					</div>
-				</div>
+				</Link>
 
 				<div className='mx-10 flex-1'>
 					<SearchInput />
