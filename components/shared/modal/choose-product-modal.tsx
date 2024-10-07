@@ -1,7 +1,8 @@
 'use client'
 
+import { ChooseProductForm } from '@/components/shared'
 import { Dialog } from '@/components/ui'
-import { DialogContent, DialogTitle } from '@/components/ui/dialog'
+import { DialogContent } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
 import { Product } from '@prisma/client'
 import { useRouter } from 'next/navigation'
@@ -22,7 +23,13 @@ export const ChooseProductModal: React.FC<Props> = ({ product, className }) => {
 					className
 				)}
 			>
-				<DialogTitle>{product.name}</DialogTitle>
+				<ChooseProductForm
+					className='w-full h-full'
+					imageUrl={product.imageUrl}
+					ingredients={[]}
+					name={product.name}
+					onClickAdd={() => router.back()}
+				/>
 			</DialogContent>
 		</Dialog>
 	)
