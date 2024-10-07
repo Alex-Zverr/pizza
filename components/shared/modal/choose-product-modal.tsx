@@ -1,19 +1,20 @@
 'use client'
 
-import { ChooseProductForm } from '@/components/shared'
+import { ProductWithRelations } from '@/@types/prisma'
+import { ChooseProductForm, ChooseVariantsForm } from '@/components/shared'
 import { Dialog } from '@/components/ui'
 import { DialogContent } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
-import { Product } from '@prisma/client'
 import { useRouter } from 'next/navigation'
 
 interface Props {
-	product: Product
+	product: ProductWithRelations
 	className?: string
 }
 
 export const ChooseProductModal: React.FC<Props> = ({ product, className }) => {
 	const router = useRouter()
+	const isVariantsProduct = Boolean(product.variants[0].pizzaType)
 
 	return (
 		<Dialog open={Boolean(product)} onOpenChange={() => router.back()}>
@@ -23,13 +24,23 @@ export const ChooseProductModal: React.FC<Props> = ({ product, className }) => {
 					className
 				)}
 			>
-				<ChooseProductForm
-					className='w-full h-full'
-					imageUrl={product.imageUrl}
-					ingredients={[]}
-					name={product.name}
-					onClickAdd={() => router.back()}
-				/>
+				{isVariantsProduct ? (
+					<ChooseVariantsForm
+						name={product.name}
+						variants={product.variants}
+						imageUrl={product.imageUrl}
+						ingredients={product.ingredients}
+						onClickAdd={() => router.push(`/product/${product.id}`)}
+					/>
+				) : (
+					<ChooseProductForm
+						name={product.name}
+						variants={product.variants}
+						imageUrl={product.imageUrl}
+						ingredients={product.ingredients}
+						onClickAdd={() => router.push(`/product/${product.id}`)}
+					/>
+				)}
 			</DialogContent>
 		</Dialog>
 	)
