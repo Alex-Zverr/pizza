@@ -36,7 +36,7 @@ export const ChooseProductForm: React.FC<Props> = ({
 				<Title text='Выберите пиццу' size='lg' className='font-bold' />
 				<p className='text-gray-400'>{textDetails}</p>
 
-				<Button className='h-[55px] px-10 text-base rounded-[18px] w-full'>
+				<Button className='h-[55px] px-10 text-base rounded-[18px] w-full mt-10'>
 					Добавить в корзину за p {totalPrice} ₽
 				</Button>
 			</div>

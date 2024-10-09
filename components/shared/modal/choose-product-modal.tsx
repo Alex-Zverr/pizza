@@ -3,7 +3,11 @@
 import { ProductWithRelations } from '@/@types/prisma'
 import { ChooseProductForm, ChooseVariantsForm } from '@/components/shared'
 import { Dialog } from '@/components/ui'
-import { DialogContent } from '@/components/ui/dialog'
+import {
+	DialogContent,
+	DialogDescription,
+	DialogTitle,
+} from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
 
@@ -23,6 +27,7 @@ export const ChooseProductModal: React.FC<Props> = ({ product, className }) => {
 					'p-0 w-[1060px] max-w-[1060px] min-h-[500px] bg-white overflow-hidden',
 					className
 				)}
+				aria-describedby='description'
 			>
 				{isVariantsProduct ? (
 					<ChooseVariantsForm
@@ -41,6 +46,9 @@ export const ChooseProductModal: React.FC<Props> = ({ product, className }) => {
 						onClickAdd={() => router.push(`/product/${product.id}`)}
 					/>
 				)}
+
+				<DialogTitle className='hidden' />
+				<DialogDescription className='hidden'></DialogDescription>
 			</DialogContent>
 		</Dialog>
 	)
